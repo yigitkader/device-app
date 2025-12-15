@@ -10,10 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface DeviceRepository extends JpaRepository<Device, Long> {
-    Device createDevice(Device device);
-
-    Device updateDevice(Device device);
-
     Optional<Device> findDeviceById(Long id);
 
     List<Device> findDevicesByBrand(String brand);

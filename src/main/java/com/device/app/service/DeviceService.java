@@ -21,23 +21,23 @@ public class DeviceService {
 
     public DeviceResponseDto createDevice(CreateDeviceRequest dto) {
         final Device device = new Device(dto.name(), dto.brand(), dto.state());
-        return this.deviceRepository.createDevice(device).toDto();
+        return this.deviceRepository.save(device).toDto();
     }
 
     public DeviceResponseDto updateDevice(UpdateDeviceRequest dto) {
         final Device device = this.deviceRepository.findDeviceById(dto.id())
-                .orElseThrow(() -> new DeviceNotFound("Device not found with ID: " + dto.id()));
+                .orElseThrow(() -> new DeviceNotFound(dto.id()));
 
         if (device.getState().equals(StateType.IN_USE)) {
-            return this.deviceRepository.updateDevice(new Device(device.getName(), device.getBrand(), dto.state())).toDto();
+            return this.deviceRepository.save(new Device(device.getName(), device.getBrand(), dto.state())).toDto();
         }
 
-        return this.deviceRepository.updateDevice(new Device(dto.name(), dto.brand(), dto.state())).toDto();
+        return this.deviceRepository.save(new Device(dto.name(), dto.brand(), dto.state())).toDto();
     }
 
     public DeviceResponseDto fetchDeviceById(Long id) {
         final Device device = this.deviceRepository.findDeviceById(id)
-                .orElseThrow(() -> new DeviceNotFound("Device not found with ID: " + id));
+                .orElseThrow(() -> new DeviceNotFound(id));
 
         return device.toDto();
     }
