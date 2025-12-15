@@ -5,6 +5,7 @@ import com.device.app.dto.CreateDeviceRequest;
 import com.device.app.dto.DeviceResponseDto;
 import com.device.app.dto.UpdateDeviceRequest;
 import com.device.app.enums.StateType;
+import com.device.app.exceptions.DeviceDeleteException;
 import com.device.app.exceptions.DeviceNotFound;
 import com.device.app.repository.DeviceRepository;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,10 @@ public class DeviceService {
     }
 
     public void deleteDevice(Long id) {
+        final Device device = this.deviceRepository.findDeviceById(id).orElseThrow(() -> new DeviceNotFound(id));
+        if (device.getState().equals(StateType.IN_USE)) {
+            throw new DeviceDeleteException(id);
+        }
         this.deviceRepository.deleteById(id);
     }
 }

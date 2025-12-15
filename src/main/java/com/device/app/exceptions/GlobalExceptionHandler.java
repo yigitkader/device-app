@@ -16,4 +16,13 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
     }
+
+    @ExceptionHandler(DeviceDeleteException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleDeviceDeleteException(DeviceNotFound ex) {
+        return new ErrorResponse(
+                "DEVICE_CAN_NOT_DELETE",
+                ex.getMessage()
+        );
+    }
 }
