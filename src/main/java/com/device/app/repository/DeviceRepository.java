@@ -1,4 +1,4 @@
-package com.device.app;
+package com.device.app.repository;
 
 import com.device.app.domain.Device;
 import org.springframework.data.jpa.repository.JpaRepository;

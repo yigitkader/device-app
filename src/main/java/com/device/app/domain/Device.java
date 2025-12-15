@@ -3,6 +3,8 @@ package com.device.app.domain;
 import com.device.app.enums.StateType;
 import jakarta.persistence.*;
 
+import java.time.Instant;
+
 @Entity
 @Table(name = "devices")
 public class Device {
@@ -20,6 +22,6 @@ public class Device {
     private StateType state = StateType.AVAILABLE;
 
     @Column(nullable = false, updatable = false)
-    private String creationTime;
+    private Instant creationTime;
 }
 
