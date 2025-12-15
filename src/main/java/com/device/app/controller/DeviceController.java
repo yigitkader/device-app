@@ -5,6 +5,7 @@ import com.device.app.dto.DeviceResponseDto;
 import com.device.app.dto.UpdateDeviceRequest;
 import com.device.app.enums.StateType;
 import com.device.app.service.DeviceService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,12 +16,12 @@ public class DeviceController {
 
     private final DeviceService deviceService;
 
-    public DeviceController(@RequestBody DeviceService deviceService) {
+    public DeviceController(DeviceService deviceService) {
         this.deviceService = deviceService;
     }
 
     @PostMapping("/device/create")
-    public DeviceResponseDto createDevice(@RequestBody CreateDeviceRequest device) {
+    public DeviceResponseDto createDevice(@Valid @RequestBody CreateDeviceRequest device) {
         return deviceService.createDevice(device);
     }
 
