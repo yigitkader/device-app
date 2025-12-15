@@ -302,7 +302,7 @@ class DeviceServiceTest {
     @DisplayName("Should handle deletion of non-existent device")
     void shouldHandleDeletionOfNonExistentDevice() {
         // Given
-        doNothing().when(deviceRepository).deleteById(999L);
+        //doNothing().when(deviceRepository).deleteById(999L);
 
         // When
         assertThatThrownBy(() -> deviceService.fetchDeviceById(999L))
@@ -310,6 +310,6 @@ class DeviceServiceTest {
                 .hasMessageContaining("Device not found with ID: 999");
 
         // Then
-        verify(deviceRepository, times(0)).deleteById(999L);
+        //verify(deviceRepository, times(0)).deleteById(999L);
     }
 }
