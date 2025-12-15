@@ -1,8 +1,9 @@
 package com.device.app.controller;
 
-import com.device.app.domain.Device;
-import com.device.app.dto.DeviceRequestDto;
+import com.device.app.dto.CreateDeviceRequest;
 import com.device.app.dto.DeviceResponseDto;
+import com.device.app.dto.UpdateDeviceRequest;
+import com.device.app.enums.StateType;
 import com.device.app.service.DeviceService;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,37 +19,37 @@ public class DeviceController {
     }
 
     @PostMapping("/device/create")
-    public DeviceResponseDto createDevice(DeviceRequestDto device) {
-        deviceService.createDevice();
+    public DeviceResponseDto createDevice(CreateDeviceRequest device) {
+        return deviceService.createDevice(device);
     }
 
     @PutMapping("/device/update")
-    public Device updateDevice(DeviceRequestDto device) {
-        deviceService.updateDevice(device);
+    public DeviceResponseDto updateDevice(UpdateDeviceRequest device) {
+        return deviceService.updateDevice(device);
     }
 
     @GetMapping("/device/{id}")
     public DeviceResponseDto fetchDeviceById(@PathVariable Long id) {
-        return null;
+        return deviceService.fetchDeviceById(id);
     }
 
     @GetMapping("/devices")
     public List<DeviceResponseDto> fetchAllDevices() {
-        return null;
+        return deviceService.fetchAllDevices();
     }
 
     @GetMapping("/devices/brand/{brand}")
     public List<DeviceResponseDto> fetchDevicesByBrand(@PathVariable String brand) {
-        return null;
+        return deviceService.fetchDevicesByBrand(brand);
     }
 
     @GetMapping("/devices/state/{state}")
-    public List<DeviceResponseDto> fetchDevicesByState(@PathVariable String state) {
-        return null;
+    public List<DeviceResponseDto> fetchDevicesByState(@PathVariable StateType state) {
+        return deviceService.fetchDevicesByState(state);
     }
 
     @DeleteMapping("/device/delete/{id}")
-    public Boolean deleteDevice(@PathVariable Long id) {
-        return false;
+    public void deleteDevice(@PathVariable Long id) {
+        deviceService.deleteDevice(id);
     }
 }
