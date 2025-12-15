@@ -45,7 +45,7 @@ class DeviceServiceTest {
         testDevice = new Device("iPhone 15", "Apple", StateType.AVAILABLE);
         createRequest = new CreateDeviceRequest("iPhone 15", "Apple", StateType.AVAILABLE);
         updateRequest = new UpdateDeviceRequest(1L, "iPhone 15 Pro", "Apple", StateType.IN_USE);
-        deviceInUse = new Device("iPhone 15", "Apple", StateType.AVAILABLE);
+        deviceInUse = new Device("iPhone 8", "Apple", StateType.AVAILABLE);
     }
 
     @Test
@@ -310,6 +310,6 @@ class DeviceServiceTest {
                 .hasMessageContaining("Device not found with ID: 999");
 
         // Then
-        verify(deviceRepository, times(1)).deleteById(999L);
+        verify(deviceRepository, times(0)).deleteById(999L);
     }
 }
