@@ -15,17 +15,17 @@ public class DeviceController {
 
     private final DeviceService deviceService;
 
-    public DeviceController(DeviceService deviceService) {
+    public DeviceController(@RequestBody DeviceService deviceService) {
         this.deviceService = deviceService;
     }
 
     @PostMapping("/device/create")
-    public DeviceResponseDto createDevice(CreateDeviceRequest device) {
+    public DeviceResponseDto createDevice(@RequestBody CreateDeviceRequest device) {
         return deviceService.createDevice(device);
     }
 
     @PutMapping("/device/update")
-    public DeviceResponseDto updateDevice(UpdateDeviceRequest device) {
+    public DeviceResponseDto updateDevice(@RequestBody UpdateDeviceRequest device) {
         return deviceService.updateDevice(device);
     }
 
