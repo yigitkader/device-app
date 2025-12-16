@@ -16,7 +16,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate # we use init-scheme.sql for schema management with dockerize
+      ddl-auto: validate
     show-sql: false
     properties:
       hibernate:
@@ -38,18 +38,37 @@ server:
 spring.lifecycle:
   timeout-per-shutdown-phase: 30s
 
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# Logging Configuration
 logging:
   level:
     root: INFO
     com.device.app: INFO
     org.springframework.web: INFO
     org.hibernate: WARN
+    org.springdoc: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
+# SpringDoc OpenAPI Configuration
 springdoc:
   api-docs:
     path: /api-docs
+    enabled: true
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
     tags-sorter: alpha
     operations-sorter: alpha
+    display-request-duration: true
+    display-operation-id: false

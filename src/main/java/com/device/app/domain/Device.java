@@ -33,7 +33,13 @@ public class Device {
         this.name = name;
         this.brand = brand;
         this.state = state;
-        this.creationTime = Instant.now();
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.creationTime == null) {
+            this.creationTime = Instant.now();
+        }
     }
 
     public Long getId() {

@@ -30,8 +30,9 @@ public class DeviceService {
                 .orElseThrow(() -> new DeviceNotFound(dto.id()));
 
         if (device.getState().equals(StateType.IN_USE)) {
-            return this.deviceRepository.save(new Device(device.getName(), device.getBrand(), dto.state())).toDto();
-        }else {
+            device.setState(dto.state());
+            return this.deviceRepository.save(device).toDto();
+        } else {
             if (dto.name() != null) device.setName(dto.name());
             if (dto.brand() != null) device.setBrand(dto.brand());
             if (dto.state() != null) device.setState(dto.state());
