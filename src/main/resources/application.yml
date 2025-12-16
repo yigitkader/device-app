@@ -44,3 +44,14 @@ logging:
     com.device.app: INFO
     org.springframework.web: INFO
     org.hibernate: WARN
+
+
+# Mevcut konfigürasyonların altına ekleyin
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    tags-sorter: alpha
+    operations-sorter: alpha
