@@ -3,49 +3,64 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: device-postgres
-    env_file:
-      - .env
+    container_name: device-postgres-prod
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-device_db}
+      POSTGRES_USER: ${POSTGRES_USER:-device_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-device_pass}
+      POSTGRES_INITDB_ARGS: "-E UTF8"
     ports:
       - "5432:5432"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-prod-data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-device_user} -d ${POSTGRES_DB:-device_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 30s
     networks:
-      - device-network
+      - device-network-prod
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: device-app
+      args:
+        PROFILE: prod
+    container_name: device-app-prod
+    restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
-    env_file:
-      - .env
     environment:
-      DATABASE_URL: ${DATABASE_URL}
-      DATABASE_USERNAME: ${DATABASE_USERNAME}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      DDL_AUTO: ${DDL_AUTO}
-      SERVER_PORT: ${SERVER_PORT}
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-device_db}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-device_user}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-device_pass}
+      JAVA_OPTS: "-Xms512m -Xmx1024m -XX:+UseG1GC"
     ports:
-      - "${SERVER_PORT}:8080"
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     networks:
-      - device-network
+      - device-network-prod
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
-  postgres-data:
+  postgres-prod-data:
+    driver: local
 
 networks:
-  device-network:
+  device-network-prod:
+    driver: bridge
