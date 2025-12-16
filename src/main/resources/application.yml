@@ -16,7 +16,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate # we use init-scheme.sql for schema management with dockerize
     show-sql: false
     properties:
       hibernate:
@@ -45,8 +45,6 @@ logging:
     org.springframework.web: INFO
     org.hibernate: WARN
 
-
-# Mevcut konfigürasyonların altına ekleyin
 springdoc:
   api-docs:
     path: /api-docs

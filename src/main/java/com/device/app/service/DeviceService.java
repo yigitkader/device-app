@@ -31,9 +31,13 @@ public class DeviceService {
 
         if (device.getState().equals(StateType.IN_USE)) {
             return this.deviceRepository.save(new Device(device.getName(), device.getBrand(), dto.state())).toDto();
+        }else {
+            if (dto.name() != null) device.setName(dto.name());
+            if (dto.brand() != null) device.setBrand(dto.brand());
+            if (dto.state() != null) device.setState(dto.state());
         }
 
-        return this.deviceRepository.save(new Device(dto.name(), dto.brand(), dto.state())).toDto();
+        return this.deviceRepository.save(device).toDto();
     }
 
     public DeviceResponseDto fetchDeviceById(Long id) {
