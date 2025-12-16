@@ -1,6 +1,9 @@
 spring:
+  application:
+    name: device-management-service
+
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/device_db}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/device_db}
     username: ${SPRING_DATASOURCE_USERNAME:device_user}
     password: ${SPRING_DATASOURCE_PASSWORD:device_pass}
     driver-class-name: org.postgresql.Driver
@@ -13,7 +16,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     show-sql: false
     properties:
       hibernate:

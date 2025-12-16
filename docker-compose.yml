@@ -3,7 +3,7 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: device-postgres-prod
+    container_name: device-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-device_db}
@@ -13,7 +13,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres-prod-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
       - ./init-db:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-device_user} -d ${POSTGRES_DB:-device_db}"]
@@ -22,25 +22,22 @@ services:
       retries: 5
       start_period: 30s
     networks:
-      - device-network-prod
+      - device-network
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        PROFILE: prod
-    container_name: device-app-prod
+    container_name: device-app
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
     environment:
-      SPRING_PROFILES_ACTIVE: prod
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-device_db}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-device_user}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-device_pass}
-      JAVA_OPTS: "-Xms512m -Xmx1024m -XX:+UseG1GC"
+      JAVA_OPTS: ${JAVA_OPTS:--Xms512m -Xmx1024m -XX:+UseG1GC}
     ports:
       - "8080:8080"
     healthcheck:
@@ -50,7 +47,7 @@ services:
       retries: 3
       start_period: 60s
     networks:
-      - device-network-prod
+      - device-network
     logging:
       driver: "json-file"
       options:
@@ -58,9 +55,9 @@ services:
         max-file: "3"
 
 volumes:
-  postgres-prod-data:
+  postgres-data:
     driver: local
 
 networks:
-  device-network-prod:
+  device-network:
     driver: bridge

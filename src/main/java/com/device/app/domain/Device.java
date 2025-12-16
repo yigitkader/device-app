@@ -19,6 +19,7 @@ public class Device {
     @Column(nullable = false)
     private String brand;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StateType state = StateType.AVAILABLE;
 

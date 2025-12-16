@@ -17,8 +17,7 @@ RUN ./mvnw dependency:go-offline -B
 COPY src ./src
 
 # Build application
-ARG PROFILE=prod
-RUN ./mvnw clean package -DskipTests -B -P${PROFILE}
+RUN ./mvnw clean package -DskipTests -B
 
 # Runtime stage
 FROM eclipse-temurin:21-jre-alpine
