@@ -30,7 +30,7 @@ RUN apk add --no-cache wget curl
 # Copy jar from builder
 COPY --from=builder /app/target/*.jar app.jar
 
-# Create non-root user
+# Create non-root user , this is best practice for security
 RUN addgroup -S spring && \
     adduser -S spring -G spring && \
     chown -R spring:spring /app
