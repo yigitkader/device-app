@@ -45,7 +45,7 @@ class DeviceServiceTest {
         testDevice = new Device("iPhone 15", "Apple", StateType.AVAILABLE);
         createRequest = new CreateDeviceRequest("iPhone 15", "Apple", StateType.AVAILABLE);
         updateRequest = new UpdateDeviceRequest(1L, "iPhone 15 Pro", "Apple", StateType.IN_USE);
-        deviceInUse = new Device("iPhone 8", "Apple", StateType.AVAILABLE);
+        deviceInUse = new Device("iPhone 8", "Apple", StateType.IN_USE);
     }
 
     @Test
@@ -302,14 +302,14 @@ class DeviceServiceTest {
     @DisplayName("Should handle deletion of non-existent device")
     void shouldHandleDeletionOfNonExistentDevice() {
         // Given
-        //doNothing().when(deviceRepository).deleteById(999L);
+        when(deviceRepository.findDeviceById(999L)).thenReturn(Optional.empty());
 
         // When
-        assertThatThrownBy(() -> deviceService.fetchDeviceById(999L))
+        assertThatThrownBy(() -> deviceService.deleteDevice(999L))
                 .isInstanceOf(DeviceNotFound.class)
                 .hasMessageContaining("Device not found with ID: 999");
 
         // Then
-        //verify(deviceRepository, times(0)).deleteById(999L);
+        verify(deviceRepository, times(0)).deleteById(999L);
     }
 }
